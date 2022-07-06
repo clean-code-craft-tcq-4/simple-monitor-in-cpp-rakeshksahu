@@ -6,21 +6,38 @@ bool findIfNotInRange(float value, float min, float max)
 {
     return (value < min || value > max);
 }
-bool batteryIsOk(float temperature, float soc, float chargeRate) {
+
+bool checkTemperature(float temperature)
+{
+  bool result {true};
   if(findIfNotInRange(temperature, 0, 45)) {
     cout << "Temperature out of range!\n";
-    return false;
-  } else if(findIfNotInRange(soc, 20, 80)) {
-    cout << "State of Charge out of range!\n";
-    return false;
-  } else if(findIfNotInRange(chargeRate ,0, 0.8)) {
-    cout << "Charge Rate out of range!\n";
-    return false;
+    result = false;
   }
-  return true;
+  return result;   
 }
 
-int main() {
-  assert(batteryIsOk(25, 70, 0.7) == true);
-  assert(batteryIsOk(50, 85, 0) == false);
+bool checkSoc(float soc)
+{
+  bool result {true};
+  if(findIfNotInRange(soc, 20, 80)) {
+    cout << "State of Charge out of range!\n";
+    result = false;
+  }
+  return result;
+}
+
+bool checkChargeRate(float chargeRate)
+{
+  bool result {true};
+  if(findIfNotInRange(chargeRate, 0, 0.8)) {
+    cout << "Charge Rate out of range!\n";
+    result = false;
+  }
+  return result;
+}
+
+bool batteryIsOk(float temperature, float soc, float chargeRate)
+{
+  return checkTemperature(temperature) && checkSoc(soc) && checkChargeRate(chargeRate);
 }
