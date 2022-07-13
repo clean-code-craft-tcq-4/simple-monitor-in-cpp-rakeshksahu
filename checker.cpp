@@ -1,5 +1,7 @@
 #include <assert.h>
 #include <iostream>
+#include "checker.hpp"
+
 using namespace std;
 
 bool findIfNotInRange(float value, float min, float max)
@@ -10,7 +12,7 @@ bool findIfNotInRange(float value, float min, float max)
 bool checkTemperature(float temperature)
 {
   bool result {true};
-  if(findIfNotInRange(temperature, 0, 45)) {
+  if(findIfNotInRange(temperature, MIN_TEMP, MAX_TEMP)) {
     cout << "Temperature out of range!\n";
     result = false;
   }
@@ -20,7 +22,7 @@ bool checkTemperature(float temperature)
 bool checkSoc(float soc)
 {
   bool result {true};
-  if(findIfNotInRange(soc, 20, 80)) {
+  if(findIfNotInRange(soc, MIN_SOC, MAX_SOC)) {
     cout << "State of Charge out of range!\n";
     result = false;
   }
@@ -30,7 +32,7 @@ bool checkSoc(float soc)
 bool checkChargeRate(float chargeRate)
 {
   bool result {true};
-  if(findIfNotInRange(chargeRate, 0, 0.8)) {
+  if(findIfNotInRange(chargeRate, MIN_CRATE, MAX_CRATE)) {
     cout << "Charge Rate out of range!\n";
     result = false;
   }
