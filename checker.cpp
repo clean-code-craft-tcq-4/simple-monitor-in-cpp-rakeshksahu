@@ -1,45 +1,25 @@
 #include <assert.h>
 #include <iostream>
+#include <memory>
 #include "checker.hpp"
-
+#include "BMSParam.hpp"
+#include "MessageProvider.hpp"
 using namespace std;
 
-bool findIfNotInRange(float value, float min, float max)
+bool batteryIsApproachingThreshold(float temperature, float soc, float chargeRate)
 {
-    return (value < min || value > max);
-}
-
-bool checkTemperature(float temperature)
-{
-  bool result {true};
-  if(findIfNotInRange(temperature, MIN_TEMP, MAX_TEMP)) {
-    cout << "Temperature out of range!\n";
-    result = false;
-  }
-  return result;   
-}
-
-bool checkSoc(float soc)
-{
-  bool result {true};
-  if(findIfNotInRange(soc, MIN_SOC, MAX_SOC)) {
-    cout << "State of Charge out of range!\n";
-    result = false;
-  }
-  return result;
-}
-
-bool checkChargeRate(float chargeRate)
-{
-  bool result {true};
-  if(findIfNotInRange(chargeRate, MIN_CRATE, MAX_CRATE)) {
-    cout << "Charge Rate out of range!\n";
-    result = false;
-  }
-  return result;
+  std::shared_ptr<MessageProvider> engMsgProvider(new EnglishMessageProvider()); 
+  std::shared_ptr<BMSParam> temp(new Temperature(temperature, engMsgProvider.get())); 
+  std::shared_ptr<BMSParam> stateOfCharge(new SOC(soc, engMsgProvider.get()));
+  std::shared_ptr<BMSParam> rateOfCharge(new ChargeRate(chargeRate, engMsgProvider.get()));
+  return (temp->checkIfToleranceApproaching() && stateOfCharge->checkIfToleranceApproaching() && rateOfCharge->checkIfToleranceApproaching());
 }
 
 bool batteryIsOk(float temperature, float soc, float chargeRate)
 {
-  return checkTemperature(temperature) && checkSoc(soc) && checkChargeRate(chargeRate);
+  std::shared_ptr<MessageProvider> grMsgProvider(new GermanMessageProvider()); 
+  std::shared_ptr<BMSParam> temp(new Temperature(temperature, grMsgProvider.get())); 
+  std::shared_ptr<BMSParam> stateOfCharge(new SOC(soc, grMsgProvider.get()));
+  std::shared_ptr<BMSParam> rateOfCharge(new ChargeRate(chargeRate, grMsgProvider.get()));
+  return (temp->checkWithinRange() && stateOfCharge->checkWithinRange() && rateOfCharge->checkWithinRange());
 }
