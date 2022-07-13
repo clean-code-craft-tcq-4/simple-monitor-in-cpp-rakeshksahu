@@ -16,33 +16,16 @@ class BMSParam
     virtual bool checkIfToleranceApproaching() = 0;
     virtual bool checkWithinRange() = 0;
     protected:
-    float getMinApproachingLevel(float minValue);
-    float getMaxApproachingLevel(float maxValue);
+    float getMinApproachingLevel(float minValue, float maxValue);
+    float getMaxApproachingLevel(float minValue, float maxValue);
 };
 
 class Temperature : public BMSParam
 {
     public:
     explicit Temperature(float value, MessageProvider* msgProvider) : m_value(value), m_msgProvider(msgProvider) {} 
-    bool checkIfToleranceApproaching() override
-    {
-        bool result = (((MIN_TEMP < m_value) && (m_value < getMinApproachingLevel(MIN_TEMP)))
-         || ((getMaxApproachingLevel(MAX_TEMP) < m_value) && (m_value < MAX_TEMP)));
-        if (result)
-        {
-            std::cout << m_msgProvider->getWarningMessageForTemp() << std::endl;
-        }
-        return result;
-    }
-    bool checkWithinRange() override
-    {
-        bool result = ((MIN_TEMP < m_value) && (m_value < MAX_TEMP));
-        if (result == false)
-        {
-            std::cout << m_msgProvider->getErrorMessageForTemp() << std::endl;
-        }
-        return result;
-    }
+    bool checkIfToleranceApproaching() override;
+    bool checkWithinRange() override;
     private:
     float m_value {0};
     MessageProvider *m_msgProvider {nullptr};
@@ -54,25 +37,8 @@ class SOC : public BMSParam
 {
     public:
     explicit SOC(float value, MessageProvider* msgProvider) : m_value(value), m_msgProvider(msgProvider) {} 
-    bool checkIfToleranceApproaching() override
-    {
-        bool result = (((MIN_SOC < m_value) && (m_value < getMinApproachingLevel(MIN_SOC)))
-         || ((getMaxApproachingLevel(MAX_SOC) < m_value) && (m_value < MAX_SOC)));
-        if (result)
-        {
-            cout << m_msgProvider->getWarningMessageForSOC() << endl;
-        }
-        return result;
-    }
-    bool checkWithinRange() override
-    {
-        bool result = ((MIN_SOC < m_value) && (m_value < MAX_SOC));
-        if (result == false)
-        {
-            cout << m_msgProvider->getWarningMessageForSOC() << endl;
-        }
-        return result;
-    }
+    bool checkIfToleranceApproaching() override;
+    bool checkWithinRange() override;
     private:
     float m_value {0};
     MessageProvider *m_msgProvider {nullptr};
@@ -84,25 +50,8 @@ class ChargeRate : public BMSParam
 {
     public:
     explicit ChargeRate(float value, MessageProvider* msgProvider) : m_value(value), m_msgProvider(msgProvider) {} 
-    bool checkIfToleranceApproaching() override
-    {
-        bool result = (((MIN_CHARGE_RATE < m_value) && (m_value < getMinApproachingLevel(MIN_CHARGE_RATE)))
-         || ((getMaxApproachingLevel(MAX_CHARGE_RATE) < m_value) && (m_value < MAX_CHARGE_RATE)));
-        if (result)
-        {
-            cout << m_msgProvider->getWarningMessageForCR() << endl;
-        }
-        return result;
-    }
-    bool checkWithinRange() override
-    {
-        bool result = ((MIN_CHARGE_RATE < m_value) && (m_value < MAX_CHARGE_RATE));
-        if (result == false)
-        {
-            cout << m_msgProvider->getErrorMessageForCR() << endl;
-        }
-        return result;
-    }
+    bool checkIfToleranceApproaching() override;
+    bool checkWithinRange() override;
     private:
     float m_value {0};
     MessageProvider *m_msgProvider {nullptr};

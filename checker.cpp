@@ -12,7 +12,7 @@ bool batteryIsApproachingThreshold(float temperature, float soc, float chargeRat
   std::shared_ptr<BMSParam> temp(new Temperature(temperature, engMsgProvider.get())); 
   std::shared_ptr<BMSParam> stateOfCharge(new SOC(soc, engMsgProvider.get()));
   std::shared_ptr<BMSParam> rateOfCharge(new ChargeRate(chargeRate, engMsgProvider.get()));
-  return (temp->checkIfToleranceApproaching() && stateOfCharge->checkIfToleranceApproaching() && rateOfCharge->checkIfToleranceApproaching());
+  return (temp->checkIfToleranceApproaching() || stateOfCharge->checkIfToleranceApproaching() || rateOfCharge->checkIfToleranceApproaching());
 }
 
 bool batteryIsOk(float temperature, float soc, float chargeRate)
