@@ -12,10 +12,15 @@ float BMSParam::getMaxApproachingLevel(float minValue, float maxValue)
     return maxValue - (((maxValue - minValue) * EARLY_WARNING_PERCENTAGE) / 100);
 }
 
+bool BMSParam::checkIfApproachingThreshold(float value, float minValue, float maxValue)
+{
+    return (((minValue < value) && (value < getMinApproachingLevel(minValue, maxValue)))
+        || ((getMaxApproachingLevel(minValue, maxValue) < value) && (value < maxValue)));
+}
+
 bool Temperature::checkIfToleranceApproaching()
 {
-    bool result = (((MIN_TEMP < m_value) && (m_value < getMinApproachingLevel(MIN_TEMP, MAX_TEMP)))
-        || ((getMaxApproachingLevel(MIN_TEMP, MAX_TEMP) < m_value) && (m_value < MAX_TEMP)));
+    bool result = checkIfApproachingThreshold(m_value, MIN_TEMP, MAX_TEMP);
     if (result)
     {
         std::cout << m_msgProvider->getWarningMessageForTemp() << std::endl;
@@ -35,8 +40,7 @@ bool Temperature::checkWithinRange()
 
 bool SOC::checkIfToleranceApproaching()
 {
-    bool result = (((MIN_SOC < m_value) && (m_value < getMinApproachingLevel(MIN_SOC, MAX_SOC)))
-        || ((getMaxApproachingLevel(MIN_SOC, MAX_SOC) < m_value) && (m_value < MAX_SOC)));
+    bool result = checkIfApproachingThreshold(m_value, MIN_SOC, MAX_SOC);
     if (result)
     {
         cout << m_msgProvider->getWarningMessageForSOC() << endl;
@@ -56,8 +60,7 @@ bool SOC::checkWithinRange()
 
 bool ChargeRate::checkIfToleranceApproaching()
 {
-    bool result = (((MIN_CHARGE_RATE < m_value) && (m_value < getMinApproachingLevel(MIN_CHARGE_RATE, MAX_CHARGE_RATE)))
-        || ((getMaxApproachingLevel(MIN_CHARGE_RATE, MAX_CHARGE_RATE) < m_value) && (m_value < MAX_CHARGE_RATE)));
+    bool result = checkIfApproachingThreshold(m_value, MIN_CHARGE_RATE, MAX_CHARGE_RATE);
     if (result)
     {
         cout << m_msgProvider->getWarningMessageForCR() << endl;
