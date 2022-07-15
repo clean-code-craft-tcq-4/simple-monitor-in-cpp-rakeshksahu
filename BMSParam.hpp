@@ -19,6 +19,8 @@ class BMSParam
     float getMinApproachingLevel(float minValue, float maxValue);
     float getMaxApproachingLevel(float minValue, float maxValue);
     bool checkIfApproachingThreshold(float value, float minValue, float maxValue);
+    bool checkInMinThresholdApproaching(float value, float minValue, float maxValue);
+    bool checkInMaxThresholdApproaching(float value, float minValue, float maxValue);
 };
 
 class Temperature : public BMSParam

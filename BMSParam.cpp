@@ -2,6 +2,16 @@
 
 BMSParam::~BMSParam() = default;
 
+bool BMSParam::checkInMinThresholdApproaching(float value, float minValue, float maxValue)
+{
+    return ((minValue < value) && (value < getMinApproachingLevel(minValue, maxValue)));
+}
+
+bool BMSParam::checkInMaxThresholdApproaching(float value, float minValue, float maxValue)
+{
+    return ((getMaxApproachingLevel(minValue, maxValue) < value) && (value < maxValue));
+}
+
 float BMSParam::getMinApproachingLevel(float minValue, float maxValue)
 {
     return minValue + (((maxValue - minValue) * EARLY_WARNING_PERCENTAGE) / 100);
@@ -14,8 +24,8 @@ float BMSParam::getMaxApproachingLevel(float minValue, float maxValue)
 
 bool BMSParam::checkIfApproachingThreshold(float value, float minValue, float maxValue)
 {
-    return (((minValue < value) && (value < getMinApproachingLevel(minValue, maxValue)))
-        || ((getMaxApproachingLevel(minValue, maxValue) < value) && (value < maxValue)));
+    return checkInMinThresholdApproaching(value, minValue, maxValue) 
+        || checkInMaxThresholdApproaching(value, minValue, maxValue);
 }
 
 bool Temperature::checkIfToleranceApproaching()
